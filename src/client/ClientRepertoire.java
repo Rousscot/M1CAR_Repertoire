@@ -56,7 +56,7 @@ public class ClientRepertoire implements Repertoire {
         this.log("cherche");
         try {
             (new DataOutputStream(this.socket.getOutputStream())).writeBytes("cherche\n");
-            Boolean shouldSendName = (Boolean) (new ObjectInputStream(this.socket.getInputStream())).readObject(); //TODO: Check why the hell I cannot use readBoolean
+            Boolean shouldSendName = (new ObjectInputStream(this.socket.getInputStream())).readBoolean();
             if (shouldSendName) {
                 (new DataOutputStream(this.socket.getOutputStream())).writeBytes(nom + "\n");
                 return (Personne) (new ObjectInputStream(this.socket.getInputStream())).readObject();

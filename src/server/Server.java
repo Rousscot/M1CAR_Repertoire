@@ -46,7 +46,9 @@ public class Server {
         });
         this.commands.put("cherche", (ServerRepertoire rep, Socket sock) -> {
             try {
-                (new ObjectOutputStream(sock.getOutputStream())).writeObject(true);
+                ObjectOutputStream ops = new ObjectOutputStream(sock.getOutputStream());
+                ops.writeBoolean(true);
+                ops.flush();
                 Personne found = rep.chercherPersonne((new BufferedReader(new InputStreamReader(sock.getInputStream()))).readLine());
                 (new ObjectOutputStream(sock.getOutputStream())).writeObject(found);
             } catch (IOException e) {
