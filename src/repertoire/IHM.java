@@ -323,24 +323,4 @@ implements java.awt.event.ActionListener, javax.swing.event.ListSelectionListene
     fixerErreur(null);
   }
 
-  //
-  // Exemple d'utilisation de cette interface graphique.
-  //
-  public static void main (String args[])
-  {
-      Repertoire carnet = new Carnet();
-    // Creation d'un repertoire d'adresses.
-    //carnet = new ????;
-
-    // Creer l'IHM.
-    IHM ihm = new IHM();
-    // Lui indiquer le repertoire visualise. 
-    ihm.fixerRepertoire (carnet);
-
-    // Creation d'une fenetre.
-    //
-    ihm.setVisible(true);
-  }
-
-
 }
