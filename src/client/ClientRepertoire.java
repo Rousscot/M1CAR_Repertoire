@@ -3,10 +3,7 @@ package client;
 import repertoire.Personne;
 import repertoire.Repertoire;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.*;
 import java.net.Socket;
 
 /**
@@ -56,7 +53,17 @@ public class ClientRepertoire implements Repertoire {
 
     @Override
     public Personne chercherPersonne(String nom) {
-        //TODO
+        this.log("cherche");
+        try {
+            (new DataOutputStream(this.socket.getOutputStream())).writeBytes("cherche\n");
+            Boolean shouldSendName = (Boolean) (new ObjectInputStream(this.socket.getInputStream())).readObject(); //TODO: Check why the hell I cannot use readBoolean
+            if (shouldSendName) {
+                (new DataOutputStream(this.socket.getOutputStream())).writeBytes(nom + "\n");
+                return (Personne) (new ObjectInputStream(this.socket.getInputStream())).readObject();
+            }
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();//TODO
+        }
         return null;
     }
 

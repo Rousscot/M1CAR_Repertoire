@@ -1,9 +1,8 @@
 package server;
 
-import java.io.BufferedReader;
-import java.io.DataOutputStream;
-import java.io.IOException;
-import java.io.InputStreamReader;
+import repertoire.Personne;
+
+import java.io.*;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -33,8 +32,8 @@ public class Server {
         this.log("Init commands");
         this.commands = new HashMap<>();
         this.commands.put("liste", (ServerRepertoire rep, Socket sock) -> {
-           StringBuilder builder = new StringBuilder();
-            for (String name :rep.listerPersonnes()) {
+            StringBuilder builder = new StringBuilder();
+            for (String name : rep.listerPersonnes()) {
                 builder.append(name);
                 builder.append(" ");
             }
@@ -45,7 +44,17 @@ public class Server {
                 e.printStackTrace();//TODO
             }
         });
-        this.commands.put("error", (ServerRepertoire rep, Socket sock) -> { } );//TODO
+        this.commands.put("cherche", (ServerRepertoire rep, Socket sock) -> {
+            try {
+                (new ObjectOutputStream(sock.getOutputStream())).writeObject(true);
+                Personne found = rep.chercherPersonne((new BufferedReader(new InputStreamReader(sock.getInputStream()))).readLine());
+                (new ObjectOutputStream(sock.getOutputStream())).writeObject(found);
+            } catch (IOException e) {
+                e.printStackTrace();//TODO
+            }
+        });
+        this.commands.put("error", (ServerRepertoire rep, Socket sock) -> {
+        });//TODO
         //TODO
     }
 

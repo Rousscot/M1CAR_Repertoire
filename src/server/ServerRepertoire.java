@@ -15,9 +15,12 @@ public class ServerRepertoire implements Repertoire {
 
     protected Set<Personne> contacts;
 
-    public ServerRepertoire(){
+    public ServerRepertoire() {
         this.contacts = new HashSet<>();
         contacts.add(new Personne("toto", "toto@gmail.com", "www.toto.fr", "I am a test :)"));
+        contacts.add(new Personne("toto2", "toto2@gmail.com", "www.toto2.fr", "I am a test2 :)"));
+        contacts.add(new Personne("toto3", "toto3@gmail.com", "www.toto3.fr", "I am a test3 :)"));
+        contacts.add(new Personne("toto4", "toto4@gmail.com", "www.toto4.fr", "I am a test4 :)"));
     }
 
     @Override
@@ -37,7 +40,13 @@ public class ServerRepertoire implements Repertoire {
 
     @Override
     public Personne chercherPersonne(String nom) {
-        return null; //TODO
+        for(Personne contact : this.contacts){
+            if (contact.getNom().equals(nom)){
+                System.out.println("Return user");
+                return contact;
+            }
+        }
+        return null;
     }
 
     @Override
