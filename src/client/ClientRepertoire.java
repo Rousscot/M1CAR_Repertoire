@@ -3,7 +3,10 @@ package client;
 import repertoire.Personne;
 import repertoire.Repertoire;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.Socket;
 
 /**
@@ -30,7 +33,7 @@ public class ClientRepertoire implements Repertoire {
     }
 
     public void log(String message) {
-        System.out.println("client.Client : " + message);
+        System.out.println("Client : " + message);
     }
 
     @Override
@@ -59,7 +62,13 @@ public class ClientRepertoire implements Repertoire {
 
     @Override
     public String[] listerPersonnes() {
-        //TODO
+        this.log("liste");
+        try {
+            (new DataOutputStream(this.socket.getOutputStream())).writeBytes("liste\n");
+            return (new BufferedReader(new InputStreamReader(this.socket.getInputStream())).readLine()).split("\\s+");
+        } catch (IOException e) {
+            e.printStackTrace();//TODO
+        }
         return new String[0];
     }
 }

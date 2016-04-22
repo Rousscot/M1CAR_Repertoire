@@ -1,8 +1,13 @@
 package server;
 
+import java.io.BufferedReader;
+import java.io.DataOutputStream;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
+import java.util.function.BiConsumer;
 
 /**
  * Created by JeCisC on 22/04/2016.
@@ -12,12 +17,10 @@ public class Server {
     protected static final int SOCKET = 8000;
 
     protected ServerRepertoire repertoire;
-
     protected Boolean stop;
-
     protected ServerSocket socket;
-
     protected Socket connexionSocket;
+    protected HashMap<String, BiConsumer<ServerRepertoire, Socket>> commands;
 
     public Server() throws IOException {
         this.repertoire = new ServerRepertoire();
@@ -27,34 +30,77 @@ public class Server {
     }
 
     public void initCommands() {
+        this.log("Init commands");
+        this.commands = new HashMap<>();
+        this.commands.put("liste", (ServerRepertoire rep, Socket sock) -> {
+           StringBuilder builder = new StringBuilder();
+            for (String name :rep.listerPersonnes()) {
+                builder.append(name);
+                builder.append(" ");
+            }
+            builder.append("\n");
+            try {
+                (new DataOutputStream(sock.getOutputStream())).writeBytes(builder.toString());
+            } catch (IOException e) {
+                e.printStackTrace();//TODO
+            }
+        });
+        this.commands.put("error", (ServerRepertoire rep, Socket sock) -> { } );//TODO
         //TODO
     }
 
     public void initSocket() throws IOException {
-        System.out.println("Open socket");
+        this.log("Open socket");
         this.socket = new ServerSocket(SOCKET);
     }
 
     public void launch() throws IOException {
         while (!this.stop) {
-            System.out.println("Open connection");
+            this.log("Open connection");
             this.connexionSocket = this.socket.accept();
-            new Thread(new ClientHandler(connexionSocket)).start();
+            new Thread(new ClientHandler(connexionSocket, this.repertoire, this.commands)).start();
         }
+    }
+
+    public void log(String message) {
+        System.out.println("SERVER : " + message);
     }
 
     public class ClientHandler implements Runnable {
 
         protected Socket connectionSocket;
+        protected ServerRepertoire repertoire;
+        protected HashMap<String, BiConsumer<ServerRepertoire, Socket>> commands;
 
-        public ClientHandler(Socket socket) {
+        public ClientHandler(Socket socket, ServerRepertoire repertoire, HashMap<String, BiConsumer<ServerRepertoire, Socket>> commands) {
             this.connectionSocket = socket;
+            this.repertoire = repertoire;
+            this.commands = commands;
         }
 
         public void run() {
+            this.log("Get data");
+            String receivedMessage;
+            try {
+                receivedMessage = (new BufferedReader(new InputStreamReader(this.connectionSocket.getInputStream()))).readLine().split(" ", 2)[0];
+            } catch (IOException e) {
+                receivedMessage = "error";
+                e.printStackTrace(); //TODO
+            }
 
+            this.executeAction(receivedMessage);
+
+            this.run();
         }
 
+        public void executeAction(String receivedMessage) {
+            this.log("Execute action");
+            commands.getOrDefault(receivedMessage, this.commands.get("error")).accept(this.repertoire, this.connectionSocket);
+        }
+
+        public void log(String message) {
+            System.out.println("SERVER : " + message);
+        }
 
     }
 
