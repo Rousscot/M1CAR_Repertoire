@@ -25,7 +25,7 @@ public class ServerRepertoire implements Repertoire {
 
     @Override
     public boolean ajouterPersonne(Personne personne) {
-        return false; //TODO
+        return this.contacts.add(personne);
     }
 
     @Override
