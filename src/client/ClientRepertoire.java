@@ -47,7 +47,16 @@ public class ClientRepertoire implements Repertoire {
 
     @Override
     public boolean retirerPersonne(String nom) {
-        //TODO
+        this.log("retirer");
+        try {
+            (new DataOutputStream(this.socket.getOutputStream())).writeBytes("retirer\n");
+            if((new ObjectInputStream(this.socket.getInputStream())).readBoolean()){
+                (new DataOutputStream(this.socket.getOutputStream())).writeBytes(nom + "\n");
+                return (new ObjectInputStream(this.socket.getInputStream())).readBoolean();
+            }
+        }  catch (IOException e) {
+            e.printStackTrace();//TODO
+        }
         return false;
     }
 
@@ -56,8 +65,7 @@ public class ClientRepertoire implements Repertoire {
         this.log("cherche");
         try {
             (new DataOutputStream(this.socket.getOutputStream())).writeBytes("cherche\n");
-            Boolean shouldSendName = (new ObjectInputStream(this.socket.getInputStream())).readBoolean();
-            if (shouldSendName) {
+            if ((new ObjectInputStream(this.socket.getInputStream())).readBoolean()) {
                 (new DataOutputStream(this.socket.getOutputStream())).writeBytes(nom + "\n");
                 return (Personne) (new ObjectInputStream(this.socket.getInputStream())).readObject();
             }

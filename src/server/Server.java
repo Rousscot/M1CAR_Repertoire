@@ -31,6 +31,7 @@ public class Server {
     public void initCommands() {
         this.log("Init commands");
         this.commands = new HashMap<>();
+
         this.commands.put("liste", (ServerRepertoire rep, Socket sock) -> {
             StringBuilder builder = new StringBuilder();
             for (String name : rep.listerPersonnes()) {
@@ -44,6 +45,7 @@ public class Server {
                 e.printStackTrace();//TODO
             }
         });
+
         this.commands.put("cherche", (ServerRepertoire rep, Socket sock) -> {
             try {
                 ObjectOutputStream ops = new ObjectOutputStream(sock.getOutputStream());
@@ -55,6 +57,20 @@ public class Server {
                 e.printStackTrace();//TODO
             }
         });
+
+        this.commands.put("retirer", (ServerRepertoire rep, Socket sock) -> {
+            try {
+                ObjectOutputStream ops = new ObjectOutputStream(sock.getOutputStream());
+                ops.writeBoolean(true);
+                ops.flush();
+                ops = new ObjectOutputStream(sock.getOutputStream());
+                ops.writeBoolean(rep.retirerPersonne((new BufferedReader(new InputStreamReader(sock.getInputStream()))).readLine()));
+                ops.flush();
+            } catch (IOException e) {
+                e.printStackTrace();//TODO
+            }
+        });
+
         this.commands.put("error", (ServerRepertoire rep, Socket sock) -> {
         });//TODO
         //TODO

@@ -35,14 +35,19 @@ public class ServerRepertoire implements Repertoire {
 
     @Override
     public boolean retirerPersonne(String nom) {
-        return false; //TODO
+        for(Personne contact : this.contacts){
+            if (contact.getNom().equals(nom)){
+                System.out.println("Return user");
+                return this.contacts.remove(contact);
+            }
+        }
+        return false;
     }
 
     @Override
     public Personne chercherPersonne(String nom) {
         for(Personne contact : this.contacts){
             if (contact.getNom().equals(nom)){
-                System.out.println("Return user");
                 return contact;
             }
         }
