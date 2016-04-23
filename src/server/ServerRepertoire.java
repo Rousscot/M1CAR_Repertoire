@@ -30,7 +30,11 @@ public class ServerRepertoire implements Repertoire {
 
     @Override
     public boolean modifierPersonne(Personne personne) {
-        return false; //TODO
+        Personne actual = this.chercherPersonne(personne.getNom());
+        if(!this.contacts.remove(actual)){
+            return false;
+        }
+        return this.contacts.add(personne);
     }
 
     @Override

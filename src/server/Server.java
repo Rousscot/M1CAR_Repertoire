@@ -85,6 +85,20 @@ public class Server {
             }
         });
 
+        this.commands.put("modifier", (ServerRepertoire rep, Socket sock) -> {
+            try {
+                ObjectOutputStream ops = new ObjectOutputStream(sock.getOutputStream());
+                ops.writeBoolean(true);
+                ops.flush();
+                Personne personne = (Personne) new ObjectInputStream(sock.getInputStream()).readObject();
+                ops = new ObjectOutputStream(sock.getOutputStream());
+                ops.writeBoolean(rep.modifierPersonne(personne));
+                ops.flush();
+            } catch (IOException | ClassNotFoundException e) {
+                e.printStackTrace();//TODO
+            }
+        });
+
         this.commands.put("error", (ServerRepertoire rep, Socket sock) -> {
         });//TODO
         //TODO

@@ -50,7 +50,16 @@ public class ClientRepertoire implements Repertoire {
 
     @Override
     public boolean modifierPersonne(Personne personne) {
-        //TODO
+        this.log("modifier");
+        try {
+            (new DataOutputStream(this.socket.getOutputStream())).writeBytes("modifier\n");
+            if(new ObjectInputStream(this.socket.getInputStream()).readBoolean()){
+                new ObjectOutputStream(this.socket.getOutputStream()).writeObject(personne);
+                return new ObjectInputStream(this.socket.getInputStream()).readBoolean();
+            }
+        }  catch (IOException e) {
+            e.printStackTrace();//TODO
+        }
         return false;
     }
 
