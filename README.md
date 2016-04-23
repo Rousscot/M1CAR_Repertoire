@@ -28,56 +28,56 @@ Here are the commands and the descriptions.
 ### Login
 
 **connexion**
-*Server:* send `true` to the Client when the connection is active.
-*Client:* send a `String` with the login and the password te the Server.
-*Server:* send a boolean. `true` if the password is good, `false` if the password is wrong.
+- *Server:* send `true` to the Client when the connection is active.
+- *Client:* send a `String` with the login and the password te the Server.
+- *Server:* send a boolean. `true` if the password is good, `false` if the password is wrong.
 
 ### Repertoire list management
 
 **listeRep**
-*Server:* send a `String` containing all the repertoires's id separated by a space.
+- *Server:* send a `String` containing all the repertoires's id separated by a space.
 
 **chercheRep**
-*Server:* send `true` to the Client when the connection is active.
-*Client:* send the `Repertoire`'s id to search.
-*Server:* send the `Repertoire` to the client.
+- *Server:* send `true` to the Client when the connection is active.
+- *Client:* send the `Repertoire`'s id to search.
+- *Server:* send the `Repertoire` to the client.
 
 **retirerRep**
-*Server:* send `true` to the Client when the connection is active.
-*Client:* send the `Repertoire`'s id to remove.
-*Server:* send a Boolean. `true` if the `Repertoire` existed else `false`.
+- *Server:* send `true` to the Client when the connection is active.
+- *Client:* send the `Repertoire`'s id to remove.
+- *Server:* send a Boolean. `true` if the `Repertoire` existed else `false`.
 
 **ajouterRep**
-*Server:* send `true` to the Client when the connection is active.
-*Client:* send the `Repertoire` instance to add.
-*Server:* send a Boolean. `true` if the `Repertoire` did not exist, else `false`.
+- *Server:* send `true` to the Client when the connection is active.
+- *Client:* send the `Repertoire` instance to add.
+- *Server:* send a Boolean. `true` if the `Repertoire` did not exist, else `false`.
 
 **accederRep**
-*Server:* send `true` to the Client when the connection is active.
-*Client:* send the `Repertoire`'s id that we need to select.
-*Server:* send `true` if the `Repertoire` exist. 
+- *Server:* send `true` to the Client when the connection is active.
+- *Client:* send the `Repertoire`'s id that we need to select.
+- *Server:* send `true` if the `Repertoire` exist. 
 
 ### Repertoire management
 
 **liste**
-*Server:* send a `String` containing all the contacts's name separated by a space.
+- *Server:* send a `String` containing all the contacts's name separated by a space.
 
 **cherche**
-*Server:* send `true` to the Client when the connection is active.
-*Client:* send the `Personne`'s id to search.
-*Server:* send the `Personne` to the client.
+- *Server:* send `true` to the Client when the connection is active.
+- *Client:* send the `Personne`'s id to search.
+- *Server:* send the `Personne` to the client.
 
 **retirer**
-*Server:* send `true` to the Client when the connection is active.
-*Client:* send the `Personne`'s id to remove.
-*Server:* send a Boolean. `true` if the `Personne` existed else `false`.
+- *Server:* send `true` to the Client when the connection is active.
+- *Client:* send the `Personne`'s id to remove.
+- *Server:* send a Boolean. `true` if the `Personne` existed else `false`.
 
 **ajouter**
-*Server:* send `true` to the Client when the connection is active.
-*Client:* send the `Personne` instance to add.
-*Server:* send a Boolean. `true` if the `Personne` did not exist, else `false`.
+- *Server:* send `true` to the Client when the connection is active.
+- *Client:* send the `Personne` instance to add.
+- *Server:* send a Boolean. `true` if the `Personne` did not exist, else `false`.
 
 **modifier**
-*Server:* send `true` to the Client when the connection is active.
-*Client:* send the `Personne` updated.
-*Server:* send `true` if the update succeeded, else `false`.
+- *Server:* send `true` to the Client when the connection is active.
+- *Client:* send the `Personne` updated.
+- *Server:* send `true` if the update succeeded, else `false`.
