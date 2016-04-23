@@ -37,8 +37,8 @@ public class ServerRepertoire implements Repertoire {
 
     @Override
     public boolean retirerPersonne(String nom) {
-        for(Personne contact : this.contacts){
-            if (contact.getNom().equals(nom)){
+        for (Personne contact : this.contacts) {
+            if (contact.getNom().equals(nom)) {
                 System.out.println("Return user");
                 return this.contacts.remove(contact);
             }
@@ -48,8 +48,8 @@ public class ServerRepertoire implements Repertoire {
 
     @Override
     public Personne chercherPersonne(String nom) {
-        for(Personne contact : this.contacts){
-            if (contact.getNom().equals(nom)){
+        for (Personne contact : this.contacts) {
+            if (contact.getNom().equals(nom)) {
                 return contact;
             }
         }

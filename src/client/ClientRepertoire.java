@@ -38,13 +38,13 @@ public class ClientRepertoire implements Repertoire {
         this.log("ajouter");
         try {
             (new DataOutputStream(this.socket.getOutputStream())).writeBytes("ajouter\n");
-            if(new ObjectInputStream(this.socket.getInputStream()).readBoolean()){
+            if (new ObjectInputStream(this.socket.getInputStream()).readBoolean()) {
                 new ObjectOutputStream(this.socket.getOutputStream()).writeObject(personne);
                 return new ObjectInputStream(this.socket.getInputStream()).readBoolean();
             }
             this.log("Error");
             return false;
-        }  catch (IOException e) {
+        } catch (IOException e) {
             this.log("Error");
             return false;
         }
@@ -55,13 +55,13 @@ public class ClientRepertoire implements Repertoire {
         this.log("modifier");
         try {
             (new DataOutputStream(this.socket.getOutputStream())).writeBytes("modifier\n");
-            if(new ObjectInputStream(this.socket.getInputStream()).readBoolean()){
+            if (new ObjectInputStream(this.socket.getInputStream()).readBoolean()) {
                 new ObjectOutputStream(this.socket.getOutputStream()).writeObject(personne);
                 return new ObjectInputStream(this.socket.getInputStream()).readBoolean();
             }
             this.log("Error");
             return false;
-        }  catch (IOException e) {
+        } catch (IOException e) {
             this.log("Error");
             return false;
         }
@@ -72,13 +72,13 @@ public class ClientRepertoire implements Repertoire {
         this.log("retirer");
         try {
             (new DataOutputStream(this.socket.getOutputStream())).writeBytes("retirer\n");
-            if(new ObjectInputStream(this.socket.getInputStream()).readBoolean()){
+            if (new ObjectInputStream(this.socket.getInputStream()).readBoolean()) {
                 new DataOutputStream(this.socket.getOutputStream()).writeBytes(nom + "\n");
                 return new ObjectInputStream(this.socket.getInputStream()).readBoolean();
             }
             this.log("Error");
             return false;
-        }  catch (IOException e) {
+        } catch (IOException e) {
             this.log("Error");
             return false;
         }

@@ -1,8 +1,5 @@
 package client;
 
-import repertoire.IHM;
-import repertoire.Repertoire;
-
 import java.io.IOException;
 import java.net.ConnectException;
 
@@ -13,10 +10,10 @@ public class Client {
 
     protected ClientRepertoire repertoire;
 
-    public Client(String address, Integer port){
+    public Client(String address, Integer port) {
         try {
             this.repertoire = new ClientRepertoire(address, port);
-        } catch (ConnectException e){
+        } catch (ConnectException e) {
             System.out.println("ERROR: Connection refused.");
         } catch (IOException e) {
             e.printStackTrace();//TODO
