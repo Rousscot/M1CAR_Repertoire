@@ -42,7 +42,7 @@ public class Server {
             try {
                 new DataOutputStream(sock.getOutputStream()).writeBytes(builder.toString());
             } catch (IOException e) {
-                e.printStackTrace();//TODO
+                this.log("Error during list action");
             }
         });
 
@@ -54,7 +54,7 @@ public class Server {
                 Personne found = rep.chercherPersonne(new BufferedReader(new InputStreamReader(sock.getInputStream())).readLine());
                 new ObjectOutputStream(sock.getOutputStream()).writeObject(found);
             } catch (IOException e) {
-                e.printStackTrace();//TODO
+                this.log("Error during search action");
             }
         });
 
@@ -67,7 +67,7 @@ public class Server {
                 ops.writeBoolean(rep.retirerPersonne(new BufferedReader(new InputStreamReader(sock.getInputStream())).readLine()));
                 ops.flush();
             } catch (IOException e) {
-                e.printStackTrace();//TODO
+                this.log("Error during remove action");
             }
         });
 
@@ -81,7 +81,7 @@ public class Server {
                 ops.writeBoolean(rep.ajouterPersonne(personne));
                 ops.flush();
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();//TODO
+                this.log("Error during add action");
             }
         });
 
@@ -95,13 +95,13 @@ public class Server {
                 ops.writeBoolean(rep.modifierPersonne(personne));
                 ops.flush();
             } catch (IOException | ClassNotFoundException e) {
-                e.printStackTrace();//TODO
+                this.log("Error during update action");
             }
         });
 
         this.commands.put("error", (ServerRepertoire rep, Socket sock) -> {
-        });//TODO
-        //TODO
+            this.log("Error no action of this name");
+        });
     }
 
     public void initSocket() throws IOException {
@@ -140,7 +140,6 @@ public class Server {
                 receivedMessage = (new BufferedReader(new InputStreamReader(this.connectionSocket.getInputStream()))).readLine().split(" ", 2)[0];
             } catch (IOException e) {
                 receivedMessage = "error";
-                e.printStackTrace(); //TODO
             }
 
             this.executeAction(receivedMessage);

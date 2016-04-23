@@ -18,6 +18,7 @@ public class ServerRepertoire implements Repertoire {
     public ServerRepertoire() {
         this.contacts = new HashSet<>();
         contacts.add(new Personne("toto", "toto@gmail.com", "www.toto.fr", "I am a test :)"));
+        contacts.add(new Personne("AurelienRousseau", "yao@south.park", "www.test.fr", "Hello !"));
         contacts.add(new Personne("toto2", "toto2@gmail.com", "www.toto2.fr", "I am a test2 :)"));
         contacts.add(new Personne("toto3", "toto3@gmail.com", "www.toto3.fr", "I am a test3 :)"));
         contacts.add(new Personne("toto4", "toto4@gmail.com", "www.toto4.fr", "I am a test4 :)"));

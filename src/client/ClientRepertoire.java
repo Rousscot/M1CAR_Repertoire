@@ -42,10 +42,12 @@ public class ClientRepertoire implements Repertoire {
                 new ObjectOutputStream(this.socket.getOutputStream()).writeObject(personne);
                 return new ObjectInputStream(this.socket.getInputStream()).readBoolean();
             }
+            this.log("Error");
+            return false;
         }  catch (IOException e) {
-            e.printStackTrace();//TODO
+            this.log("Error");
+            return false;
         }
-        return false;
     }
 
     @Override
@@ -57,10 +59,12 @@ public class ClientRepertoire implements Repertoire {
                 new ObjectOutputStream(this.socket.getOutputStream()).writeObject(personne);
                 return new ObjectInputStream(this.socket.getInputStream()).readBoolean();
             }
+            this.log("Error");
+            return false;
         }  catch (IOException e) {
-            e.printStackTrace();//TODO
+            this.log("Error");
+            return false;
         }
-        return false;
     }
 
     @Override
@@ -72,10 +76,12 @@ public class ClientRepertoire implements Repertoire {
                 new DataOutputStream(this.socket.getOutputStream()).writeBytes(nom + "\n");
                 return new ObjectInputStream(this.socket.getInputStream()).readBoolean();
             }
+            this.log("Error");
+            return false;
         }  catch (IOException e) {
-            e.printStackTrace();//TODO
+            this.log("Error");
+            return false;
         }
-        return false;
     }
 
     @Override
@@ -87,10 +93,12 @@ public class ClientRepertoire implements Repertoire {
                 new DataOutputStream(this.socket.getOutputStream()).writeBytes(nom + "\n");
                 return (Personne) new ObjectInputStream(this.socket.getInputStream()).readObject();
             }
+            this.log("Error");
+            return null;
         } catch (IOException | ClassNotFoundException e) {
-            e.printStackTrace();//TODO
+            this.log("Error");
+            return null;
         }
-        return null;
     }
 
     @Override
@@ -100,8 +108,8 @@ public class ClientRepertoire implements Repertoire {
             new DataOutputStream(this.socket.getOutputStream()).writeBytes("liste\n");
             return (new BufferedReader(new InputStreamReader(this.socket.getInputStream())).readLine()).split("\\s+");
         } catch (IOException e) {
-            e.printStackTrace();//TODO
+            this.log("Error");
+            return new String[0];
         }
-        return new String[0];
     }
 }
