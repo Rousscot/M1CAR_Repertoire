@@ -8,11 +8,11 @@ import java.net.ConnectException;
  */
 public class Client {
 
-    protected ClientRepertoire repertoire;
+    protected ClientRepertoireList repertoires;
 
     public Client(String address, Integer port) {
         try {
-            this.repertoire = new ClientRepertoire(address, port);
+            this.repertoires = new ClientRepertoireList(address, port);
         } catch (ConnectException e) {
             System.out.println("ERROR: Connection refused.");
         } catch (IOException e) {
@@ -20,7 +20,7 @@ public class Client {
         }
     }
 
-    public ClientRepertoire getRepertoire() {
-        return repertoire;
+    public ClientRepertoireList getRepertoires() {
+        return repertoires;
     }
 }

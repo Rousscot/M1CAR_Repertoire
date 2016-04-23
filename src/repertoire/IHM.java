@@ -49,7 +49,9 @@ public class IHM extends JFrame implements ActionListener, ListSelectionListener
         //obtenir le panel contenu par la fenÍtre.
         Container contentPane = super.getContentPane();
         // Ce panel est organise en 5 zones.
-        contentPane.setLayout(new java.awt.BorderLayout());
+        contentPane.setLayout(new BorderLayout());
+
+        this.setSize(600, 400);
 
         // Creation des boutons. La selection de ces boutons
         // est geree par l'objet IHM methode actionPerformed.
@@ -57,8 +59,8 @@ public class IHM extends JFrame implements ActionListener, ListSelectionListener
         // Panel pour les boutons.
         // Celui-ci est visuellement place a gauche.
         //
-        Panel pb = new java.awt.Panel();
-        pb.setLayout(new java.awt.GridLayout(6, 1));
+        Panel pb = new Panel();
+        pb.setLayout(new GridLayout(6, 1));
         contentPane.add("West", pb);
 
         this.b_vider = new JButton("Effacer la fiche");
@@ -73,7 +75,7 @@ public class IHM extends JFrame implements ActionListener, ListSelectionListener
         pb.add(this.b_modifier);
         this.b_modifier.addActionListener(this);
 
-        this.b_retirer = new javax.swing.JButton("Retirer une personne");
+        this.b_retirer = new JButton("Retirer une personne");
         pb.add(this.b_retirer);
         this.b_retirer.addActionListener(this);
 

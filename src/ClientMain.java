@@ -1,4 +1,5 @@
 import client.Client;
+import repertoire.AuthentificationIHM;
 import repertoire.IHM;
 
 /**
@@ -10,10 +11,12 @@ public class ClientMain {
 
         Client client = new Client(args[0], Integer.valueOf(args[1]));
 
-        IHM ihm = new IHM();
+        /*IHM ihm = new IHM();
 
         ihm.fixerRepertoire(client.getRepertoire());
+        */
 
+        AuthentificationIHM ihm = new AuthentificationIHM(client);
         ihm.setVisible(true);
     }
 }

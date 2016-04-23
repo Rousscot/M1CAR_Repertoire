@@ -22,7 +22,7 @@ public class Server {
     protected HashMap<String, BiConsumer<ServerRepertoire, Socket>> commands;
 
     public Server() throws IOException {
-        this.repertoire = new ServerRepertoire();
+        this.repertoire = new ServerRepertoire("Temporary");
         this.initCommands();
         this.initSocket();
         this.stop = false;
@@ -99,9 +99,7 @@ public class Server {
             }
         });
 
-        this.commands.put("error", (ServerRepertoire rep, Socket sock) -> {
-            this.log("Error no action of this name");
-        });
+        this.commands.put("error", (ServerRepertoire rep, Socket sock) -> this.log("Error no action of this name"));
     }
 
     public void initSocket() throws IOException {

@@ -15,7 +15,14 @@ public class ServerRepertoire implements Repertoire {
 
     protected Set<Personne> contacts;
 
-    public ServerRepertoire() {
+    protected String id;
+
+    public String getId() {
+        return id;
+    }
+
+    public ServerRepertoire(String id) {
+        this.id = id;
         this.contacts = new HashSet<>();
         contacts.add(new Personne("toto", "toto@gmail.com", "www.toto.fr", "I am a test :)"));
         contacts.add(new Personne("AurelienRousseau", "yao@south.park", "www.test.fr", "Hello !"));
