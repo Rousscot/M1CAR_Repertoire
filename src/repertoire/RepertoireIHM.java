@@ -1,5 +1,6 @@
 package repertoire;
 
+import client.ClientRepertoireList;
 import server.ServerRepertoire;
 
 import javax.swing.*;
@@ -14,11 +15,11 @@ import java.awt.event.WindowEvent;
 /**
  * Created by JeCisC on 23/04/2016.
  */
-public class RepertoireIHM  extends JFrame implements ActionListener, ListSelectionListener {
+public class RepertoireIHM extends JFrame implements ActionListener, ListSelectionListener {
 
     // Etat interne.
     // Reference sur la liste de repertoires courant.
-    protected ListeRepertoire repertoires;
+    protected ClientRepertoireList repertoires;
 
     // Composantes de l'interface Homme Machine.
 
@@ -145,7 +146,7 @@ public class RepertoireIHM  extends JFrame implements ActionListener, ListSelect
     }
 
     // Permet de fixer la liste de repertoires courant.
-    public void fixerRepertoires(ListeRepertoire repertoires) {
+    public void fixerRepertoires(ClientRepertoireList repertoires) {
         this.repertoires = repertoires;
         if (repertoires != null) listerRepertoires();
     }
@@ -161,14 +162,14 @@ public class RepertoireIHM  extends JFrame implements ActionListener, ListSelect
 
     // Obtenir la reference sur la liste de Repertoires.
     // Si la liste n'est pas encore fixe alors fixer l'erreur.
-    public ListeRepertoire repertoires() {
+    public ClientRepertoireList repertoires() {
         if (this.repertoires == null)
             fixerErreur("Vous n'avez pas fixe la liste de repertoires courant");
         return this.repertoires;
     }
 
     // Creer un objet Repertoire a partir de la fiche saisie.
-    public Repertoire creerRepertoire() {
+    public ServerRepertoire creerRepertoire() {
         return new ServerRepertoire(c_id.getText());
     }
 
@@ -239,7 +240,23 @@ public class RepertoireIHM  extends JFrame implements ActionListener, ListSelect
     }
 
     public void accederRepertoire(String nom) {
-        //TODO
+        if (nom == null) return;
+
+        System.out.println("IHM.accederRepertoire(" + nom + ")");
+
+        if(repertoires().accederRepertoire(nom)){
+            this.launchRepertoire(nom);
+        } else {
+            fixerErreur("Le repertoire `" + nom + "' n'existe pas");
+        }
+    }
+    public void launchRepertoire(String nom) {
+        IHM ihm = new IHM();
+        ihm.fixerRepertoire(this.repertoires.chercherRepertoire(nom));
+        ihm.setVisible(true);
+
+        this.setVisible(false);
+        this.dispose();
     }
 
 }

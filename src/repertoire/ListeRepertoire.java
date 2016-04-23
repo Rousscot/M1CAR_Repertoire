@@ -14,7 +14,7 @@ public interface ListeRepertoire {
      * * @return false Si deja present.
      * *
      **/
-    boolean ajouterRepertoire(Repertoire repertoire);
+    boolean ajouterRepertoire(ServerRepertoire repertoire);
 
     /**
      * * Retirer un repertoire de la liste.

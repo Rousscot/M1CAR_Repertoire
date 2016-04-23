@@ -1,6 +1,8 @@
 package repertoire;
 
-public class Personne implements java.io.Serializable {
+import java.io.Serializable;
+
+public class Personne implements Serializable {
     /**
      * *  Son nom.
      **/

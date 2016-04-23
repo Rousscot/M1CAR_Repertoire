@@ -3,6 +3,7 @@ package server;
 import repertoire.Personne;
 import repertoire.Repertoire;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
@@ -11,7 +12,7 @@ import java.util.Set;
 /**
  * Created by JeCisC on 22/04/2016.
  */
-public class ServerRepertoire implements Repertoire {
+public class ServerRepertoire implements Repertoire, Serializable {
 
     protected Set<Personne> contacts;
 

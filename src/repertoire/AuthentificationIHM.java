@@ -6,8 +6,11 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
+import java.io.DataOutputStream;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
+import java.net.Socket;
 
 /**
  * Created by JeCisC on 23/04/2016.
@@ -83,14 +86,6 @@ public class AuthentificationIHM extends JFrame implements ActionListener {
         // Fixer l'erreur avec le message par defaut.
         fixerErreur(null);
 
-        addWindowListener(
-                new WindowAdapter() {
-                    public void windowClosing(WindowEvent e) {
-                        // Arreter le programme.
-                        System.exit(0);
-                    }
-                }
-        );
     }
 
     // Gestion de la validation des boutons.
@@ -110,6 +105,33 @@ public class AuthentificationIHM extends JFrame implements ActionListener {
     }
 
     public void valider() {
-        //TODO
+        if(isAuthorizedToLog()){
+            this.launchRepertoires();
+        } else {
+            this.l_probleme.setText("Wrong login or password!");
+        }
+    }
+
+    public Boolean isAuthorizedToLog(){
+        try {
+            Socket socket = new Socket(this.client.getAddress(), this.client.getPort());
+            (new DataOutputStream(socket.getOutputStream())).writeBytes("connexion\n");
+            if (new ObjectInputStream(socket.getInputStream()).readBoolean()) {
+                (new DataOutputStream(socket.getOutputStream())).writeBytes(this.c_identifiant.getText() + " " + String.valueOf(this.c_password.getPassword()) + "\n");
+                return new ObjectInputStream(socket.getInputStream()).readBoolean();
+            }
+        } catch (IOException e) {
+            this.l_probleme.setText("NetworkError !");
+        }
+        return false;
+    }
+
+    public void launchRepertoires() {
+        RepertoireIHM ihm = new RepertoireIHM();
+        ihm.fixerRepertoires(this.client.getRepertoires());
+        ihm.setVisible(true);
+
+        this.setVisible(false);
+        this.dispose();
     }
 }
