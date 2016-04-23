@@ -50,9 +50,9 @@ public class ClientRepertoire implements Repertoire {
         this.log("retirer");
         try {
             (new DataOutputStream(this.socket.getOutputStream())).writeBytes("retirer\n");
-            if((new ObjectInputStream(this.socket.getInputStream())).readBoolean()){
-                (new DataOutputStream(this.socket.getOutputStream())).writeBytes(nom + "\n");
-                return (new ObjectInputStream(this.socket.getInputStream())).readBoolean();
+            if(new ObjectInputStream(this.socket.getInputStream()).readBoolean()){
+                new DataOutputStream(this.socket.getOutputStream()).writeBytes(nom + "\n");
+                return new ObjectInputStream(this.socket.getInputStream()).readBoolean();
             }
         }  catch (IOException e) {
             e.printStackTrace();//TODO
@@ -64,10 +64,10 @@ public class ClientRepertoire implements Repertoire {
     public Personne chercherPersonne(String nom) {
         this.log("cherche");
         try {
-            (new DataOutputStream(this.socket.getOutputStream())).writeBytes("cherche\n");
-            if ((new ObjectInputStream(this.socket.getInputStream())).readBoolean()) {
-                (new DataOutputStream(this.socket.getOutputStream())).writeBytes(nom + "\n");
-                return (Personne) (new ObjectInputStream(this.socket.getInputStream())).readObject();
+            new DataOutputStream(this.socket.getOutputStream()).writeBytes("cherche\n");
+            if (new ObjectInputStream(this.socket.getInputStream()).readBoolean()) {
+                new DataOutputStream(this.socket.getOutputStream()).writeBytes(nom + "\n");
+                return (Personne) new ObjectInputStream(this.socket.getInputStream()).readObject();
             }
         } catch (IOException | ClassNotFoundException e) {
             e.printStackTrace();//TODO
@@ -79,7 +79,7 @@ public class ClientRepertoire implements Repertoire {
     public String[] listerPersonnes() {
         this.log("liste");
         try {
-            (new DataOutputStream(this.socket.getOutputStream())).writeBytes("liste\n");
+            new DataOutputStream(this.socket.getOutputStream()).writeBytes("liste\n");
             return (new BufferedReader(new InputStreamReader(this.socket.getInputStream())).readLine()).split("\\s+");
         } catch (IOException e) {
             e.printStackTrace();//TODO

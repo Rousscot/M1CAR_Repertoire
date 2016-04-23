@@ -40,7 +40,7 @@ public class Server {
             }
             builder.append("\n");
             try {
-                (new DataOutputStream(sock.getOutputStream())).writeBytes(builder.toString());
+                new DataOutputStream(sock.getOutputStream()).writeBytes(builder.toString());
             } catch (IOException e) {
                 e.printStackTrace();//TODO
             }
@@ -51,8 +51,8 @@ public class Server {
                 ObjectOutputStream ops = new ObjectOutputStream(sock.getOutputStream());
                 ops.writeBoolean(true);
                 ops.flush();
-                Personne found = rep.chercherPersonne((new BufferedReader(new InputStreamReader(sock.getInputStream()))).readLine());
-                (new ObjectOutputStream(sock.getOutputStream())).writeObject(found);
+                Personne found = rep.chercherPersonne(new BufferedReader(new InputStreamReader(sock.getInputStream())).readLine());
+                new ObjectOutputStream(sock.getOutputStream()).writeObject(found);
             } catch (IOException e) {
                 e.printStackTrace();//TODO
             }
@@ -64,7 +64,7 @@ public class Server {
                 ops.writeBoolean(true);
                 ops.flush();
                 ops = new ObjectOutputStream(sock.getOutputStream());
-                ops.writeBoolean(rep.retirerPersonne((new BufferedReader(new InputStreamReader(sock.getInputStream()))).readLine()));
+                ops.writeBoolean(rep.retirerPersonne(new BufferedReader(new InputStreamReader(sock.getInputStream())).readLine()));
                 ops.flush();
             } catch (IOException e) {
                 e.printStackTrace();//TODO
