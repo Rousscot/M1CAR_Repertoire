@@ -6,7 +6,6 @@ import repertoire.Repertoire;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 
 /**
  * Created by JeCisC on 22/04/2016.
@@ -27,11 +26,10 @@ public class ClientRepertoire implements Repertoire {
     public boolean ajouterPersonne(Personne personne) {
         this.log("ajouter");
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
-            oos.writeUTF("ajouter");
-            oos.writeObject(personne);
-            oos.flush();
-            return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
+            this.oos().writeUTF("ajouter");
+            this.oos().writeObject(personne);
+            this.oos().flush();
+            return this.ois().readBoolean();
         } catch (IOException e) {
             this.log("Error");
             return false;
@@ -42,11 +40,10 @@ public class ClientRepertoire implements Repertoire {
     public boolean modifierPersonne(Personne personne) {
         this.log("modifier");
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
-            oos.writeUTF("modifier");
-            oos.writeObject(personne);
-            oos.flush();
-            return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
+            this.oos().writeUTF("modifier");
+            this.oos().writeObject(personne);
+            this.oos().flush();
+            return this.ois().readBoolean();
         } catch (IOException e) {
             this.log("Error");
             return false;
@@ -57,11 +54,10 @@ public class ClientRepertoire implements Repertoire {
     public boolean retirerPersonne(String nom) {
         this.log("retirer");
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
-            oos.writeUTF("retirer");
-            oos.writeUTF(nom);
-            oos.flush();
-            return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
+            this.oos().writeUTF("retirer");
+            this.oos().writeUTF(nom);
+            this.oos().flush();
+            return this.ois().readBoolean();
         } catch (IOException e) {
             this.log("Error");
             return false;
@@ -72,11 +68,10 @@ public class ClientRepertoire implements Repertoire {
     public Personne chercherPersonne(String nom) {
         this.log("cherche");
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
-            oos.writeUTF("cherche");
-            oos.writeUTF(nom);
-            oos.flush();
-            return (Personne) new ObjectInputStream(this.socket().getInputStream()).readObject();
+            this.oos().writeUTF("cherche");
+            this.oos().writeUTF(nom);
+            this.oos().flush();
+            return (Personne) this.ois().readObject();
         } catch (IOException | ClassNotFoundException e) {
             this.log("Error");
             return null;
@@ -87,17 +82,20 @@ public class ClientRepertoire implements Repertoire {
     public String[] listerPersonnes() {
         this.log("liste");
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
-            oos.writeUTF("liste");
-            oos.flush();
-            return (new ObjectInputStream(this.socket().getInputStream())).readUTF().split("\\s+");
+            this.oos().writeUTF("liste");
+            this.oos().flush();
+            return this.ois().readUTF().split("\\s+");
         } catch (IOException e) {
             this.log("Error");
             return new String[0];
         }
     }
 
-    public Socket socket() {
-        return client.socket();
+    public ObjectOutputStream oos() {
+        return client.oos();
+    }
+
+    public ObjectInputStream ois() {
+        return client.ois();
     }
 }

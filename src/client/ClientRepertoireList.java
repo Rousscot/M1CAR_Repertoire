@@ -6,7 +6,6 @@ import server.ServerRepertoire;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 
 /**
  * Created by JeCisC on 23/04/2016.
@@ -27,11 +26,10 @@ public class ClientRepertoireList implements ListeRepertoire {
     public boolean ajouterRepertoire(ServerRepertoire repertoire) {
         this.log("ajouterRep");
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
-            oos.writeUTF("ajouterRep");
-            oos.writeObject(repertoire);
-            oos.flush();
-            return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
+            this.oos().writeUTF("ajouterRep");
+            this.oos().writeObject(repertoire);
+            this.oos().flush();
+            return this.ois().readBoolean();
         } catch (IOException e) {
             this.log("Error");
             return false;
@@ -42,11 +40,10 @@ public class ClientRepertoireList implements ListeRepertoire {
     public boolean retirerRepertoire(String nom) {
         this.log("retirerRep");
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
-            oos.writeUTF("retirerRep");
-            oos.writeUTF(nom);
-            oos.flush();
-            return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
+            this.oos().writeUTF("retirerRep");
+            this.oos().writeUTF(nom);
+            this.oos().flush();
+            return this.ois().readBoolean();
         } catch (IOException e) {
             this.log("Error");
             return false;
@@ -57,11 +54,10 @@ public class ClientRepertoireList implements ListeRepertoire {
     public ServerRepertoire chercherRepertoire(String nom) {
         this.log("chercheRep");
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
-            oos.writeUTF("chercheRep");
-            oos.writeUTF(nom);
-            oos.flush();
-            return (ServerRepertoire) new ObjectInputStream(this.socket().getInputStream()).readObject();
+            this.oos().writeUTF("chercheRep");
+            this.oos().writeUTF(nom);
+            this.oos().flush();
+            return (ServerRepertoire) this.ois().readObject();
         } catch (IOException | ClassNotFoundException e) {
             this.log("Error");
             return null;
@@ -72,10 +68,9 @@ public class ClientRepertoireList implements ListeRepertoire {
     public String[] listerRepertoires() {
         this.log("listeRep");
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
-            oos.writeUTF("listeRep");
-            oos.flush();
-            return (new ObjectInputStream(this.socket().getInputStream())).readUTF().split("\\s+");
+            this.oos().writeUTF("listeRep");
+            this.oos().flush();
+            return this.ois().readUTF().split("\\s+");
         } catch (IOException e) {
             this.log("Error");
             return new String[0];
@@ -85,18 +80,21 @@ public class ClientRepertoireList implements ListeRepertoire {
     public Boolean accederRepertoire(String nom) {
         this.log("accederRep");
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
-            oos.writeUTF("accederRep");
-            oos.writeUTF(nom);
-            oos.flush();
-            return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
+            this.oos().writeUTF("accederRep");
+            this.oos().writeUTF(nom);
+            this.oos().flush();
+            return this.ois().readBoolean();
         } catch (IOException e) {
             this.log("Error");
             return null;
         }
     }
 
-    public Socket socket() {
-        return client.socket();
+    public ObjectOutputStream oos() {
+        return client.oos();
+    }
+
+    public ObjectInputStream ois() {
+        return client.ois();
     }
 }

@@ -3,7 +3,9 @@ package server;
 import repertoire.Personne;
 import repertoire.Repertoire;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.util.HashMap;
@@ -48,13 +50,25 @@ public class Server {
         protected Map<String, Runnable> commands;
         protected Map<String, Integer> users;
         protected ObjectInputStream ois;
+        protected ObjectOutputStream oos;
 
         public ClientHandler(Socket socket, ServerRepertoireList repertoires, Map<String, Integer> users) {
             this.log("Open connection from " + socket.getInetAddress() + " port " + socket.getPort());
             this.connectionSocket = socket;
+            this.initStreams();
             this.repertoires = repertoires;
             this.users = users;
             this.initCommands();
+        }
+
+        public void initStreams() {
+            try {
+                this.ois = new ObjectInputStream(this.connectionSocket.getInputStream());
+                this.oos = new ObjectOutputStream(this.connectionSocket.getOutputStream());
+            } catch (IOException e) {
+                e.printStackTrace();
+                this.log("Error. Cannot instanciate the streams :(");
+            }
         }
 
         public void initCommands() {
@@ -64,9 +78,8 @@ public class Server {
             this.commands.put("connexion", () -> {
                 try {
                     String[] messages = this.ois.readUTF().split(" ");
-                    ObjectOutputStream oos = new ObjectOutputStream(this.connectionSocket.getOutputStream());
-                    oos.writeBoolean(this.users.getOrDefault(messages[0], 0) == messages[1].hashCode());
-                    oos.flush();
+                    this.oos.writeBoolean(this.users.getOrDefault(messages[0], 0) == messages[1].hashCode());
+                    this.oos.flush();
                 } catch (IOException e) {
                     this.log("Error during login");
                 }
@@ -80,9 +93,8 @@ public class Server {
                 }
                 builder.append("\n");
                 try {
-                    ObjectOutputStream oos = new ObjectOutputStream(this.connectionSocket.getOutputStream());
-                    oos.writeUTF(builder.toString());
-                    oos.flush();
+                    this.oos.writeUTF(builder.toString());
+                    this.oos.flush();
                 } catch (IOException e) {
                     this.log("Error during list repertoires action");
                 }
@@ -91,7 +103,8 @@ public class Server {
             this.commands.put("chercheRep", () -> {
                 try {
                     Repertoire found = this.repertoires.chercherRepertoire(this.ois.readUTF());
-                    new ObjectOutputStream(this.connectionSocket.getOutputStream()).writeObject(found);
+                    this.oos.writeObject(found);
+                    this.oos.flush();
                 } catch (IOException e) {
                     this.log("Error during search repertoire action");
                 }
@@ -99,9 +112,8 @@ public class Server {
 
             this.commands.put("retirerRep", () -> {
                 try {
-                    ObjectOutputStream oos = new ObjectOutputStream(this.connectionSocket.getOutputStream());
-                    oos.writeBoolean(this.repertoires.retirerRepertoire(this.ois.readUTF()));
-                    oos.flush();
+                    this.oos.writeBoolean(this.repertoires.retirerRepertoire(this.ois.readUTF()));
+                    this.oos.flush();
                 } catch (IOException e) {
                     this.log("Error during remove repertoire action");
                 }
@@ -110,9 +122,8 @@ public class Server {
             this.commands.put("ajouterRep", () -> {
                 try {
                     ServerRepertoire repertoire = (ServerRepertoire) this.ois.readObject();
-                    ObjectOutputStream oos = new ObjectOutputStream(this.connectionSocket.getOutputStream());
-                    oos.writeBoolean(this.repertoires.ajouterRepertoire(repertoire));
-                    oos.flush();
+                    this.oos.writeBoolean(this.repertoires.ajouterRepertoire(repertoire));
+                    this.oos.flush();
                 } catch (IOException | ClassNotFoundException e) {
                     this.log("Error during add repertoire action");
                 }
@@ -121,9 +132,8 @@ public class Server {
             this.commands.put("accederRep", () -> {
                 try {
                     this.currentRepertoire = this.repertoires.chercherRepertoire(this.ois.readUTF());
-                    ObjectOutputStream oos = new ObjectOutputStream(this.connectionSocket.getOutputStream());
-                    oos.writeBoolean(this.currentRepertoire != null);
-                    oos.flush();
+                    this.oos.writeBoolean(this.currentRepertoire != null);
+                    this.oos.flush();
                 } catch (IOException e) {
                     this.log("Error during access repertoire action");
                 }
@@ -137,9 +147,8 @@ public class Server {
                 }
                 builder.append("\n");
                 try {
-                    ObjectOutputStream oos = new ObjectOutputStream(this.connectionSocket.getOutputStream());
-                    oos.writeUTF(builder.toString());
-                    oos.flush();
+                    this.oos.writeUTF(builder.toString());
+                    this.oos.flush();
                 } catch (IOException e) {
                     this.log("Error during list action");
                 }
@@ -148,7 +157,7 @@ public class Server {
             this.commands.put("cherche", () -> {
                 try {
                     Personne found = this.currentRepertoire.chercherPersonne(this.ois.readUTF());
-                    new ObjectOutputStream(this.connectionSocket.getOutputStream()).writeObject(found);
+                    this.oos.writeObject(found);
                 } catch (IOException e) {
                     this.log("Error during search action");
                 }
@@ -156,9 +165,8 @@ public class Server {
 
             this.commands.put("retirer", () -> {
                 try {
-                    ObjectOutputStream oos = new ObjectOutputStream(this.connectionSocket.getOutputStream());
-                    oos.writeBoolean(this.currentRepertoire.retirerPersonne(this.ois.readUTF()));
-                    oos.flush();
+                    this.oos.writeBoolean(this.currentRepertoire.retirerPersonne(this.ois.readUTF()));
+                    this.oos.flush();
                 } catch (IOException e) {
                     this.log("Error during remove action");
                 }
@@ -167,9 +175,8 @@ public class Server {
             this.commands.put("ajouter", () -> {
                 try {
                     Personne personne = (Personne) this.ois.readObject();
-                    ObjectOutputStream oos = new ObjectOutputStream(this.connectionSocket.getOutputStream());
-                    oos.writeBoolean(this.currentRepertoire.ajouterPersonne(personne));
-                    oos.flush();
+                    this.oos.writeBoolean(this.currentRepertoire.ajouterPersonne(personne));
+                    this.oos.flush();
                 } catch (IOException | ClassNotFoundException e) {
                     this.log("Error during add action");
                 }
@@ -178,9 +185,8 @@ public class Server {
             this.commands.put("modifier", () -> {
                 try {
                     Personne personne = (Personne) this.ois.readObject();
-                    ObjectOutputStream oos = new ObjectOutputStream(this.connectionSocket.getOutputStream());
-                    oos.writeBoolean(this.currentRepertoire.modifierPersonne(personne));
-                    oos.flush();
+                    this.oos.writeBoolean(this.currentRepertoire.modifierPersonne(personne));
+                    this.oos.flush();
                 } catch (IOException | ClassNotFoundException e) {
                     this.log("Error during update action");
                 }
@@ -193,15 +199,15 @@ public class Server {
             this.log("Get data");
             String receivedMessage;
             try {
-                this.ois = new ObjectInputStream(this.connectionSocket.getInputStream());
                 receivedMessage = this.ois.readUTF().split(" ", 2)[0];
             } catch (IOException e) {
                 receivedMessage = "error";
             }
 
             this.executeAction(receivedMessage);
-
-            this.run();
+            if (!this.connectionSocket.isClosed()) {
+                this.run();
+            }
         }
 
         public void executeAction(String receivedMessage) {

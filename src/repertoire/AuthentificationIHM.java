@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.Socket;
 
 /**
  * Created by JeCisC on 23/04/2016.
@@ -113,11 +112,10 @@ public class AuthentificationIHM extends JFrame implements ActionListener {
 
     public Boolean isAuthorizedToLog() {
         try {
-            ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
-            oos.writeUTF("connexion");
-            oos.writeUTF(this.c_identifiant.getText() + " " + String.valueOf(this.c_password.getPassword()));
-            oos.flush();
-            return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
+            this.oos().writeUTF("connexion");
+            this.oos().writeUTF(this.c_identifiant.getText() + " " + String.valueOf(this.c_password.getPassword()));
+            this.oos().flush();
+            return this.ois().readBoolean();
 
         } catch (IOException e) {
             this.l_probleme.setText("NetworkError !");
@@ -134,7 +132,11 @@ public class AuthentificationIHM extends JFrame implements ActionListener {
         this.dispose();
     }
 
-    public Socket socket() {
-        return client.socket();
+    public ObjectOutputStream oos() {
+        return client.oos();
+    }
+
+    public ObjectInputStream ois() {
+        return client.ois();
     }
 }

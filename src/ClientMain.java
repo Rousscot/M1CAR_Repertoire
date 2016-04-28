@@ -11,7 +11,7 @@ public class ClientMain {
         Client client = new Client(args[0], Integer.valueOf(args[1]));
 
         AuthentificationIHM ihm = new AuthentificationIHM(client);
-
+        
         ihm.setVisible(true);
     }
 }
