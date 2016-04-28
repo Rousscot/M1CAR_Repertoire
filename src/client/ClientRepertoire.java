@@ -3,7 +3,9 @@ package client;
 import repertoire.Personne;
 import repertoire.Repertoire;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
@@ -28,12 +30,8 @@ public class ClientRepertoire implements Repertoire {
             ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
             oos.writeUTF("ajouter");
             oos.flush();
-            if (new ObjectInputStream(this.socket().getInputStream()).readBoolean()) {
-                new ObjectOutputStream(this.socket().getOutputStream()).writeObject(personne);
-                return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
-            }
-            this.log("Error");
-            return false;
+            new ObjectOutputStream(this.socket().getOutputStream()).writeObject(personne);
+            return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
         } catch (IOException e) {
             this.log("Error");
             return false;
@@ -47,12 +45,8 @@ public class ClientRepertoire implements Repertoire {
             ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
             oos.writeUTF("modifier");
             oos.flush();
-            if (new ObjectInputStream(this.socket().getInputStream()).readBoolean()) {
-                new ObjectOutputStream(this.socket().getOutputStream()).writeObject(personne);
-                return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
-            }
-            this.log("Error");
-            return false;
+            new ObjectOutputStream(this.socket().getOutputStream()).writeObject(personne);
+            return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
         } catch (IOException e) {
             this.log("Error");
             return false;
@@ -66,14 +60,10 @@ public class ClientRepertoire implements Repertoire {
             ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
             oos.writeUTF("retirer");
             oos.flush();
-            if (new ObjectInputStream(this.socket().getInputStream()).readBoolean()) {
-                oos = new ObjectOutputStream(this.socket().getOutputStream());
-                oos.writeUTF(nom);
-                oos.flush();
-                return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
-            }
-            this.log("Error");
-            return false;
+            oos = new ObjectOutputStream(this.socket().getOutputStream());
+            oos.writeUTF(nom);
+            oos.flush();
+            return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
         } catch (IOException e) {
             this.log("Error");
             return false;
@@ -87,14 +77,10 @@ public class ClientRepertoire implements Repertoire {
             ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
             oos.writeUTF("cherche");
             oos.flush();
-            if (new ObjectInputStream(this.socket().getInputStream()).readBoolean()) {
-                oos = new ObjectOutputStream(this.socket().getOutputStream());
-                oos.writeUTF(nom);
-                oos.flush();
-                return (Personne) new ObjectInputStream(this.socket().getInputStream()).readObject();
-            }
-            this.log("Error");
-            return null;
+            oos = new ObjectOutputStream(this.socket().getOutputStream());
+            oos.writeUTF(nom);
+            oos.flush();
+            return (Personne) new ObjectInputStream(this.socket().getInputStream()).readObject();
         } catch (IOException | ClassNotFoundException e) {
             this.log("Error");
             return null;

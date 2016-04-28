@@ -6,7 +6,6 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -117,12 +116,11 @@ public class AuthentificationIHM extends JFrame implements ActionListener {
             ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
             oos.writeUTF("connexion");
             oos.flush();
-            if (new ObjectInputStream(this.socket().getInputStream()).readBoolean()) {
-                oos = new ObjectOutputStream(this.socket().getOutputStream());
-                oos.writeUTF(this.c_identifiant.getText() + " " + String.valueOf(this.c_password.getPassword()));
-                oos.flush();
-                return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
-            }
+            oos = new ObjectOutputStream(this.socket().getOutputStream());
+            oos.writeUTF(this.c_identifiant.getText() + " " + String.valueOf(this.c_password.getPassword()));
+            oos.flush();
+            return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
+
         } catch (IOException e) {
             this.l_probleme.setText("NetworkError !");
         }
