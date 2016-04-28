@@ -29,8 +29,8 @@ public class ClientRepertoireList implements ListeRepertoire {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
             oos.writeUTF("ajouterRep");
+            oos.writeObject(repertoire);
             oos.flush();
-            new ObjectOutputStream(this.socket().getOutputStream()).writeObject(repertoire);
             return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
         } catch (IOException e) {
             this.log("Error");
@@ -44,8 +44,6 @@ public class ClientRepertoireList implements ListeRepertoire {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
             oos.writeUTF("retirerRep");
-            oos.flush();
-            oos = new ObjectOutputStream(this.socket().getOutputStream());
             oos.writeUTF(nom);
             oos.flush();
             return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
@@ -61,8 +59,6 @@ public class ClientRepertoireList implements ListeRepertoire {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
             oos.writeUTF("chercheRep");
-            oos.flush();
-            oos = new ObjectOutputStream(this.socket().getOutputStream());
             oos.writeUTF(nom);
             oos.flush();
             return (ServerRepertoire) new ObjectInputStream(this.socket().getInputStream()).readObject();
@@ -91,8 +87,6 @@ public class ClientRepertoireList implements ListeRepertoire {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
             oos.writeUTF("accederRep");
-            oos.flush();
-            oos = new ObjectOutputStream(this.socket().getOutputStream());
             oos.writeUTF(nom);
             oos.flush();
             return new ObjectInputStream(this.socket().getInputStream()).readBoolean();

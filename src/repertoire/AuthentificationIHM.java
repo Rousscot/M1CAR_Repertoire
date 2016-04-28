@@ -115,8 +115,6 @@ public class AuthentificationIHM extends JFrame implements ActionListener {
         try {
             ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
             oos.writeUTF("connexion");
-            oos.flush();
-            oos = new ObjectOutputStream(this.socket().getOutputStream());
             oos.writeUTF(this.c_identifiant.getText() + " " + String.valueOf(this.c_password.getPassword()));
             oos.flush();
             return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
