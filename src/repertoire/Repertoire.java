@@ -8,7 +8,7 @@ public interface Repertoire {
      * * @return false Si deja presente.
      * *
      **/
-    public boolean ajouterPersonne(Personne personne);
+    boolean ajouterPersonne(Personne personne);
 
     /**
      * * Modifier une personne dans le repertoire.
@@ -17,7 +17,7 @@ public interface Repertoire {
      * * @return false Si le nom de la personne n'existe pas.
      * *
      **/
-    public boolean modifierPersonne(Personne personne);
+    boolean modifierPersonne(Personne personne);
 
     /**
      * * Retirer une personne du repertoire.
@@ -26,7 +26,7 @@ public interface Repertoire {
      * * @return false Si le nom de la personne n'existe pas.
      * *
      **/
-    public boolean retirerPersonne(String nom);
+    boolean retirerPersonne(String nom);
 
     /**
      * * Rechercher une personne dans le repertoire.
@@ -35,7 +35,7 @@ public interface Repertoire {
      * * @return null Si la personne n'existe pas.
      * *
      **/
-    public Personne chercherPersonne(String nom);
+    Personne chercherPersonne(String nom);
 
     /**
      * * Lister les noms des personnes.
@@ -43,7 +43,7 @@ public interface Repertoire {
      * * @return Un tableau des noms des personnes.
      * *
      **/
-    public String[] listerPersonnes();
+    String[] listerPersonnes();
 }
 
 
