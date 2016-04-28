@@ -25,7 +25,9 @@ public class ClientRepertoireList implements ListeRepertoire {
     public boolean ajouterRepertoire(ServerRepertoire repertoire) {
         this.log("ajouterRep");
         try {
-            (new DataOutputStream(this.socket().getOutputStream())).writeBytes("ajouterRep\n");
+            ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
+            oos.writeUTF("ajouterRep");
+            oos.flush();
             if (new ObjectInputStream(this.socket().getInputStream()).readBoolean()) {
                 new ObjectOutputStream(this.socket().getOutputStream()).writeObject(repertoire);
                 return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
@@ -42,9 +44,13 @@ public class ClientRepertoireList implements ListeRepertoire {
     public boolean retirerRepertoire(String nom) {
         this.log("retirerRep");
         try {
-            (new DataOutputStream(this.socket().getOutputStream())).writeBytes("retirerRep\n");
+            ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
+            oos.writeUTF("retirerRep");
+            oos.flush();
             if (new ObjectInputStream(this.socket().getInputStream()).readBoolean()) {
-                new DataOutputStream(this.socket().getOutputStream()).writeBytes(nom + "\n");
+                oos = new ObjectOutputStream(this.socket().getOutputStream());
+                oos.writeUTF(nom);
+                oos.flush();
                 return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
             }
             this.log("Error");
@@ -59,9 +65,13 @@ public class ClientRepertoireList implements ListeRepertoire {
     public ServerRepertoire chercherRepertoire(String nom) {
         this.log("chercheRep");
         try {
-            new DataOutputStream(this.socket().getOutputStream()).writeBytes("chercheRep\n");
+            ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
+            oos.writeUTF("chercheRep");
+            oos.flush();
             if (new ObjectInputStream(this.socket().getInputStream()).readBoolean()) {
-                new DataOutputStream(this.socket().getOutputStream()).writeBytes(nom + "\n");
+                oos = new ObjectOutputStream(this.socket().getOutputStream());
+                oos.writeUTF(nom);
+                oos.flush();
                 return (ServerRepertoire) new ObjectInputStream(this.socket().getInputStream()).readObject();
             }
             this.log("Error");
@@ -76,8 +86,10 @@ public class ClientRepertoireList implements ListeRepertoire {
     public String[] listerRepertoires() {
         this.log("listeRep");
         try {
-            new DataOutputStream(this.socket().getOutputStream()).writeBytes("listeRep\n");
-            return (new BufferedReader(new InputStreamReader(this.socket().getInputStream())).readLine()).split("\\s+");
+            ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
+            oos.writeUTF("listeRep");
+            oos.flush();
+            return (new ObjectInputStream(this.socket().getInputStream())).readUTF().split("\\s+");
         } catch (IOException e) {
             this.log("Error");
             return new String[0];
@@ -87,9 +99,13 @@ public class ClientRepertoireList implements ListeRepertoire {
     public Boolean accederRepertoire(String nom) {
         this.log("accederRep");
         try {
-            new DataOutputStream(this.socket().getOutputStream()).writeBytes("accederRep\n");
+            ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
+            oos.writeUTF("accederRep");
+            oos.flush();
             if (new ObjectInputStream(this.socket().getInputStream()).readBoolean()) {
-                new DataOutputStream(this.socket().getOutputStream()).writeBytes(nom + "\n");
+                oos = new ObjectOutputStream(this.socket().getOutputStream());
+                oos.writeUTF(nom);
+                oos.flush();
                 return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
             }
             this.log("Error");

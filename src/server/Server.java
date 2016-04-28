@@ -65,7 +65,7 @@ public class Server {
                     ObjectOutputStream ops = new ObjectOutputStream(this.connectionSocket.getOutputStream());
                     ops.writeBoolean(true);
                     ops.flush();
-                    String[] messages = new BufferedReader(new InputStreamReader(this.connectionSocket.getInputStream())).readLine().split(" ");
+                    String[] messages = new ObjectInputStream(this.connectionSocket.getInputStream()).readUTF().split(" ");
                     ops = new ObjectOutputStream(this.connectionSocket.getOutputStream());
                     ops.writeBoolean(this.users.getOrDefault(messages[0], 0) == messages[1].hashCode());
                     ops.flush();
@@ -82,7 +82,9 @@ public class Server {
                 }
                 builder.append("\n");
                 try {
-                    new DataOutputStream(this.connectionSocket.getOutputStream()).writeBytes(builder.toString());
+                    ObjectOutputStream oos = new ObjectOutputStream(this.connectionSocket.getOutputStream());
+                    oos.writeUTF(builder.toString());
+                    oos.flush();
                 } catch (IOException e) {
                     this.log("Error during list repertoires action");
                 }
@@ -93,7 +95,7 @@ public class Server {
                     ObjectOutputStream ops = new ObjectOutputStream(this.connectionSocket.getOutputStream());
                     ops.writeBoolean(true);
                     ops.flush();
-                    Repertoire found = this.repertoires.chercherRepertoire(new BufferedReader(new InputStreamReader(this.connectionSocket.getInputStream())).readLine());
+                    Repertoire found = this.repertoires.chercherRepertoire(new ObjectInputStream(this.connectionSocket.getInputStream()).readUTF());
                     new ObjectOutputStream(this.connectionSocket.getOutputStream()).writeObject(found);
                 } catch (IOException e) {
                     this.log("Error during search repertoire action");
@@ -106,7 +108,7 @@ public class Server {
                     ops.writeBoolean(true);
                     ops.flush();
                     ops = new ObjectOutputStream(this.connectionSocket.getOutputStream());
-                    ops.writeBoolean(this.repertoires.retirerRepertoire(new BufferedReader(new InputStreamReader(this.connectionSocket.getInputStream())).readLine()));
+                    ops.writeBoolean(this.repertoires.retirerRepertoire(new ObjectInputStream(this.connectionSocket.getInputStream()).readUTF()));
                     ops.flush();
                 } catch (IOException e) {
                     this.log("Error during remove repertoire action");
@@ -132,7 +134,7 @@ public class Server {
                     ObjectOutputStream ops = new ObjectOutputStream(this.connectionSocket.getOutputStream());
                     ops.writeBoolean(true);
                     ops.flush();
-                    this.currentRepertoire = this.repertoires.chercherRepertoire(new BufferedReader(new InputStreamReader(this.connectionSocket.getInputStream())).readLine());
+                    this.currentRepertoire = this.repertoires.chercherRepertoire(new ObjectInputStream(this.connectionSocket.getInputStream()).readUTF());
                     ops = new ObjectOutputStream(this.connectionSocket.getOutputStream());
                     ops.writeBoolean(this.currentRepertoire != null);
                     ops.flush();
@@ -149,7 +151,9 @@ public class Server {
                 }
                 builder.append("\n");
                 try {
-                    new DataOutputStream(this.connectionSocket.getOutputStream()).writeBytes(builder.toString());
+                    ObjectOutputStream oos = new ObjectOutputStream(this.connectionSocket.getOutputStream());
+                    oos.writeUTF(builder.toString());
+                    oos.flush();
                 } catch (IOException e) {
                     this.log("Error during list action");
                 }
@@ -160,7 +164,7 @@ public class Server {
                     ObjectOutputStream ops = new ObjectOutputStream(this.connectionSocket.getOutputStream());
                     ops.writeBoolean(true);
                     ops.flush();
-                    Personne found = this.currentRepertoire.chercherPersonne(new BufferedReader(new InputStreamReader(this.connectionSocket.getInputStream())).readLine());
+                    Personne found = this.currentRepertoire.chercherPersonne(new ObjectInputStream(this.connectionSocket.getInputStream()).readUTF());
                     new ObjectOutputStream(this.connectionSocket.getOutputStream()).writeObject(found);
                 } catch (IOException e) {
                     this.log("Error during search action");
@@ -173,7 +177,7 @@ public class Server {
                     ops.writeBoolean(true);
                     ops.flush();
                     ops = new ObjectOutputStream(this.connectionSocket.getOutputStream());
-                    ops.writeBoolean(this.currentRepertoire.retirerPersonne(new BufferedReader(new InputStreamReader(this.connectionSocket.getInputStream())).readLine()));
+                    ops.writeBoolean(this.currentRepertoire.retirerPersonne(new ObjectInputStream(this.connectionSocket.getInputStream()).readUTF()));
                     ops.flush();
                 } catch (IOException e) {
                     this.log("Error during remove action");
@@ -215,7 +219,7 @@ public class Server {
             this.log("Get data");
             String receivedMessage;
             try {
-                receivedMessage = (new BufferedReader(new InputStreamReader(this.connectionSocket.getInputStream()))).readLine().split(" ", 2)[0];
+                receivedMessage = new ObjectInputStream(this.connectionSocket.getInputStream()).readUTF().split(" ", 2)[0];
             } catch (IOException e) {
                 receivedMessage = "error";
             }

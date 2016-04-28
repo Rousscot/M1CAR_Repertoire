@@ -9,6 +9,7 @@ import java.awt.event.ActionListener;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
@@ -113,9 +114,13 @@ public class AuthentificationIHM extends JFrame implements ActionListener {
 
     public Boolean isAuthorizedToLog() {
         try {
-            (new DataOutputStream(this.socket().getOutputStream())).writeBytes("connexion\n");
+            ObjectOutputStream oos = new ObjectOutputStream(this.socket().getOutputStream());
+            oos.writeUTF("connexion");
+            oos.flush();
             if (new ObjectInputStream(this.socket().getInputStream()).readBoolean()) {
-                (new DataOutputStream(this.socket().getOutputStream())).writeBytes(this.c_identifiant.getText() + " " + String.valueOf(this.c_password.getPassword()) + "\n");
+                oos = new ObjectOutputStream(this.socket().getOutputStream());
+                oos.writeUTF(this.c_identifiant.getText() + " " + String.valueOf(this.c_password.getPassword()));
+                oos.flush();
                 return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
             }
         } catch (IOException e) {
