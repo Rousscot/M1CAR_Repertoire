@@ -9,7 +9,6 @@ import java.awt.event.ActionListener;
 import java.io.DataOutputStream;
 import java.io.IOException;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.net.Socket;
 
 /**
@@ -105,20 +104,19 @@ public class AuthentificationIHM extends JFrame implements ActionListener {
     }
 
     public void valider() {
-        if(isAuthorizedToLog()){
+        if (isAuthorizedToLog()) {
             this.launchRepertoires();
         } else {
             this.l_probleme.setText("Wrong login or password!");
         }
     }
 
-    public Boolean isAuthorizedToLog(){
+    public Boolean isAuthorizedToLog() {
         try {
-            Socket socket = new Socket(this.client.getAddress(), this.client.getPort());
-            (new DataOutputStream(socket.getOutputStream())).writeBytes("connexion\n");
-            if (new ObjectInputStream(socket.getInputStream()).readBoolean()) {
-                (new DataOutputStream(socket.getOutputStream())).writeBytes(this.c_identifiant.getText() + " " + String.valueOf(this.c_password.getPassword()) + "\n");
-                return new ObjectInputStream(socket.getInputStream()).readBoolean();
+            (new DataOutputStream(this.socket().getOutputStream())).writeBytes("connexion\n");
+            if (new ObjectInputStream(this.socket().getInputStream()).readBoolean()) {
+                (new DataOutputStream(this.socket().getOutputStream())).writeBytes(this.c_identifiant.getText() + " " + String.valueOf(this.c_password.getPassword()) + "\n");
+                return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
             }
         } catch (IOException e) {
             this.l_probleme.setText("NetworkError !");
@@ -133,5 +131,9 @@ public class AuthentificationIHM extends JFrame implements ActionListener {
 
         this.setVisible(false);
         this.dispose();
+    }
+
+    public Socket socket() {
+        return client.socket();
     }
 }

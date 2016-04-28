@@ -2,6 +2,7 @@ package client;
 
 import java.io.IOException;
 import java.net.ConnectException;
+import java.net.Socket;
 
 /**
  * Created by JeCisC on 22/04/2016.
@@ -10,15 +11,12 @@ public class Client {
 
     protected ClientRepertoireList repertoires;
 
-    protected String address;
-
-    protected Integer port;
+    protected Socket socket;
 
     public Client(String address, Integer port) {
-        this.address = address;
-        this.port = port;
         try {
-            this.repertoires = new ClientRepertoireList(address, port);
+            this.repertoires = new ClientRepertoireList(this);
+            this.socket = new Socket(address, port);
         } catch (ConnectException e) {
             System.out.println("ERROR: Connection refused.");
         } catch (IOException e) {
@@ -26,14 +24,11 @@ public class Client {
         }
     }
 
-    public String getAddress() {
-        return address;
-    }
-    public Integer getPort() {
-        return port;
-    }
-
     public ClientRepertoireList getRepertoires() {
         return repertoires;
+    }
+
+    public Socket socket() {
+        return this.socket;
     }
 }

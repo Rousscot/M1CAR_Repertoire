@@ -11,22 +11,10 @@ import java.net.Socket;
  */
 public class ClientRepertoireList implements ListeRepertoire {
 
-    protected Socket socket;
+    protected Client client;
 
-    public ClientRepertoireList(String address, Integer port) throws IOException {
-        this.openSocket(address, port);
-    }
-
-    public void openSocket(String address, Integer port) throws IOException {
-        this.log("Address: " + address);
-        this.log("Port: " + port);
-        this.log("Open Socket");
-        this.socket = new Socket(address, port);
-    }
-
-    public void closeSocket() throws IOException {
-        this.log("Close Socket");
-        this.socket.close();
+    public ClientRepertoireList(Client client) throws IOException {
+        this.client = client;
     }
 
     public void log(String message) {
@@ -37,10 +25,10 @@ public class ClientRepertoireList implements ListeRepertoire {
     public boolean ajouterRepertoire(ServerRepertoire repertoire) {
         this.log("ajouterRep");
         try {
-            (new DataOutputStream(this.socket.getOutputStream())).writeBytes("ajouterRep\n");
-            if (new ObjectInputStream(this.socket.getInputStream()).readBoolean()) {
-                new ObjectOutputStream(this.socket.getOutputStream()).writeObject(repertoire);
-                return new ObjectInputStream(this.socket.getInputStream()).readBoolean();
+            (new DataOutputStream(this.socket().getOutputStream())).writeBytes("ajouterRep\n");
+            if (new ObjectInputStream(this.socket().getInputStream()).readBoolean()) {
+                new ObjectOutputStream(this.socket().getOutputStream()).writeObject(repertoire);
+                return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
             }
             this.log("Error");
             return false;
@@ -54,10 +42,10 @@ public class ClientRepertoireList implements ListeRepertoire {
     public boolean retirerRepertoire(String nom) {
         this.log("retirerRep");
         try {
-            (new DataOutputStream(this.socket.getOutputStream())).writeBytes("retirerRep\n");
-            if (new ObjectInputStream(this.socket.getInputStream()).readBoolean()) {
-                new DataOutputStream(this.socket.getOutputStream()).writeBytes(nom + "\n");
-                return new ObjectInputStream(this.socket.getInputStream()).readBoolean();
+            (new DataOutputStream(this.socket().getOutputStream())).writeBytes("retirerRep\n");
+            if (new ObjectInputStream(this.socket().getInputStream()).readBoolean()) {
+                new DataOutputStream(this.socket().getOutputStream()).writeBytes(nom + "\n");
+                return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
             }
             this.log("Error");
             return false;
@@ -71,10 +59,10 @@ public class ClientRepertoireList implements ListeRepertoire {
     public ServerRepertoire chercherRepertoire(String nom) {
         this.log("chercheRep");
         try {
-            new DataOutputStream(this.socket.getOutputStream()).writeBytes("chercheRep\n");
-            if (new ObjectInputStream(this.socket.getInputStream()).readBoolean()) {
-                new DataOutputStream(this.socket.getOutputStream()).writeBytes(nom + "\n");
-                return (ServerRepertoire) new ObjectInputStream(this.socket.getInputStream()).readObject();
+            new DataOutputStream(this.socket().getOutputStream()).writeBytes("chercheRep\n");
+            if (new ObjectInputStream(this.socket().getInputStream()).readBoolean()) {
+                new DataOutputStream(this.socket().getOutputStream()).writeBytes(nom + "\n");
+                return (ServerRepertoire) new ObjectInputStream(this.socket().getInputStream()).readObject();
             }
             this.log("Error");
             return null;
@@ -88,8 +76,8 @@ public class ClientRepertoireList implements ListeRepertoire {
     public String[] listerRepertoires() {
         this.log("listeRep");
         try {
-            new DataOutputStream(this.socket.getOutputStream()).writeBytes("listeRep\n");
-            return (new BufferedReader(new InputStreamReader(this.socket.getInputStream())).readLine()).split("\\s+");
+            new DataOutputStream(this.socket().getOutputStream()).writeBytes("listeRep\n");
+            return (new BufferedReader(new InputStreamReader(this.socket().getInputStream())).readLine()).split("\\s+");
         } catch (IOException e) {
             this.log("Error");
             return new String[0];
@@ -99,10 +87,10 @@ public class ClientRepertoireList implements ListeRepertoire {
     public Boolean accederRepertoire(String nom) {
         this.log("accederRep");
         try {
-            new DataOutputStream(this.socket.getOutputStream()).writeBytes("accederRep\n");
-            if (new ObjectInputStream(this.socket.getInputStream()).readBoolean()) {
-                new DataOutputStream(this.socket.getOutputStream()).writeBytes(nom + "\n");
-                return new ObjectInputStream(this.socket.getInputStream()).readBoolean();
+            new DataOutputStream(this.socket().getOutputStream()).writeBytes("accederRep\n");
+            if (new ObjectInputStream(this.socket().getInputStream()).readBoolean()) {
+                new DataOutputStream(this.socket().getOutputStream()).writeBytes(nom + "\n");
+                return new ObjectInputStream(this.socket().getInputStream()).readBoolean();
             }
             this.log("Error");
             return null;
@@ -110,5 +98,9 @@ public class ClientRepertoireList implements ListeRepertoire {
             this.log("Error");
             return null;
         }
+    }
+
+    public Socket socket() {
+        return client.socket();
     }
 }
