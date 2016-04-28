@@ -19,7 +19,6 @@ public class Server {
     protected ServerRepertoireList repertoires;
     protected Boolean stop;
     protected ServerSocket socket;
-    protected Socket connexionSocket;
     protected Map<String, Integer> users;
 
     public Server() throws IOException {
@@ -31,20 +30,14 @@ public class Server {
     }
 
     public void initSocket() throws IOException {
-        this.log("Open socket");
+        System.out.println("SERVER : Open socket");
         this.socket = new ServerSocket(SOCKET);
     }
 
     public void launch() throws IOException {
         while (!this.stop) {
-            this.log("Open connection");
-            this.connexionSocket = this.socket.accept();
-            new Thread(new ClientHandler(connexionSocket, this.repertoires, this.users)).start();
+            new Thread(new ClientHandler(this.socket.accept(), this.repertoires, this.users)).start();
         }
-    }
-
-    public void log(String message) {
-        System.out.println("SERVER : " + message);
     }
 
     public class ClientHandler implements Runnable {
@@ -56,6 +49,7 @@ public class Server {
         protected Map<String, Integer> users;
 
         public ClientHandler(Socket socket, ServerRepertoireList repertoires, Map<String, Integer> users) {
+            this.log("Open connection from " + socket.getInetAddress() + " port " + socket.getPort());
             this.connectionSocket = socket;
             this.repertoires = repertoires;
             this.users = users;
@@ -232,7 +226,7 @@ public class Server {
         }
 
         public void executeAction(String receivedMessage) {
-            this.log("Execute action");
+            this.log("Execute action: " + receivedMessage);
             commands.getOrDefault(receivedMessage, this.commands.get("error")).run();
         }
 

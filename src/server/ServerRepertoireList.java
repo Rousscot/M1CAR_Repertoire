@@ -30,7 +30,6 @@ public class ServerRepertoireList implements ListeRepertoire {
     public boolean retirerRepertoire(String nom) {
         for (ServerRepertoire repertoire : this.repertoires) {
             if (repertoire.getId().equals(nom)) {
-                System.out.println("Return user");
                 return this.repertoires.remove(repertoire);
             }
         }
