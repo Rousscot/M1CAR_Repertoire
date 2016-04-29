@@ -162,7 +162,9 @@ public class IHM extends JFrame implements ActionListener, ListSelectionListener
 
 
     public void valueChanged(ListSelectionEvent e) {
-        chercherPersonne((String) l_personnes.getSelectedValue());
+        if(!e.getValueIsAdjusting()) {
+            chercherPersonne((String) l_personnes.getSelectedValue());
+        }
     }
 
     // Permet de fixer le repertoire courant.

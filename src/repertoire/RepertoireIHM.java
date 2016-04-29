@@ -142,7 +142,9 @@ public class RepertoireIHM extends JFrame implements ActionListener, ListSelecti
 
 
     public void valueChanged(ListSelectionEvent e) {
-        chercherRepertoire((String) l_repertoires.getSelectedValue());
+        if(!e.getValueIsAdjusting()) {
+            chercherRepertoire((String) l_repertoires.getSelectedValue());
+        }
     }
 
     // Permet de fixer la liste de repertoires courant.

@@ -3,7 +3,6 @@ package client;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
-import java.net.ConnectException;
 import java.net.Socket;
 
 /**
@@ -20,10 +19,9 @@ public class Client {
         try {
             this.repertoires = new ClientRepertoireList(this);
             this.socket = new Socket(address, port);
-        } catch (ConnectException e) {
-            System.out.println("ERROR: Connection refused.");
         } catch (IOException e) {
-            e.printStackTrace();//TODO
+            System.out.println("ERROR: Connection refused.");
+            System.exit(182);
         }
     }
 

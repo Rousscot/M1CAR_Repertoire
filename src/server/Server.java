@@ -196,17 +196,25 @@ public class Server {
         }
 
         public void run() {
-            this.log("Get data");
-            String receivedMessage;
             try {
-                receivedMessage = this.ois.readUTF().split(" ", 2)[0];
-            } catch (IOException e) {
-                receivedMessage = "error";
-            }
+                while (true) {
+                    this.log("Get data");
+                    String receivedMessage;
+                    receivedMessage = this.ois.readUTF().split(" ", 2)[0];
 
-            this.executeAction(receivedMessage);
-            if (!this.connectionSocket.isClosed()) {
-                this.run();
+                    this.executeAction(receivedMessage);
+                }
+            } catch (IOException e) {
+                closeSocket();
+            }
+        }
+
+        public void closeSocket() {
+            this.log("Client closed connection");
+            try {
+                this.connectionSocket.close();
+            } catch (IOException e) {
+                this.log("Error during socket closing");
             }
         }
 
