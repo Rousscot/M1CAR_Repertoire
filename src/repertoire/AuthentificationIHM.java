@@ -1,14 +1,13 @@
 package repertoire;
 
 import client.Client;
+import client.WrongInformationException;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 
 /**
  * Created by JeCisC on 23/04/2016.
@@ -83,6 +82,7 @@ public class AuthentificationIHM extends JFrame implements ActionListener {
 
         // Fixer l'erreur avec le message par defaut.
         fixerErreur(null);
+        setVisible(true);
 
     }
 
@@ -103,40 +103,26 @@ public class AuthentificationIHM extends JFrame implements ActionListener {
     }
 
     public void valider() {
-        if (isAuthorizedToLog()) {
-            this.launchRepertoires();
-        } else {
-            this.l_probleme.setText("Wrong login or password!");
-        }
-    }
-
-    public Boolean isAuthorizedToLog() {
         try {
-            this.oos().writeUTF("connexion");
-            this.oos().writeUTF(this.c_identifiant.getText() + " " + String.valueOf(this.c_password.getPassword()));
-            this.oos().flush();
-            return this.ois().readBoolean();
-
+            this.client.connect(this.c_identifiant.getText(), String.valueOf(this.c_password.getPassword()));
+            this.launchRepertoires();
         } catch (IOException e) {
             this.l_probleme.setText("NetworkError !");
+        } catch (WrongInformationException e) {
+            this.l_probleme.setText("Wrong login or password!");
         }
-        return false;
     }
 
     public void launchRepertoires() {
         RepertoireIHM ihm = new RepertoireIHM();
         ihm.fixerRepertoires(this.client.getRepertoires());
         ihm.setVisible(true);
+        this.destroy();
+    }
 
+    public void destroy() {
         this.setVisible(false);
         this.dispose();
     }
 
-    public ObjectOutputStream oos() {
-        return client.oos();
-    }
-
-    public ObjectInputStream ois() {
-        return client.ois();
-    }
 }

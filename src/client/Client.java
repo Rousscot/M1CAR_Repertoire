@@ -25,10 +25,6 @@ public class Client {
         }
     }
 
-    public ClientRepertoireList getRepertoires() {
-        return repertoires;
-    }
-
     public ObjectOutputStream oos() {
         if (this.oos == null) {
             try {
@@ -52,5 +48,18 @@ public class Client {
             }
         }
         return ois;
+    }
+
+    public ClientRepertoireList getRepertoires() {
+        return repertoires;
+    }
+
+    public void connect(String ident, String password) throws IOException, WrongInformationException {
+        this.oos().writeUTF("connexion");
+        this.oos().writeUTF(ident + " " + password);
+        this.oos().flush();
+        if(!this.ois().readBoolean()){
+            throw new WrongInformationException();
+        }
     }
 }
